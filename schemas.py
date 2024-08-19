@@ -52,15 +52,18 @@ class BookingDisplay(BookingBase):
         from_attributes = True
 
 
-class ReservationCreate(BaseModel):
-    room_id: int
-    start_date: datetime
-    end_date: datetime
+class ReviewBase(BaseModel):
+    hotel_id: int
+    rating: int
+    comment: Optional[str] = None
 
 
-class ReservationDisplay(ReservationCreate):
+class ReviewDisplay(ReviewBase):
     id: int
     user_id: int
 
     class Config:
-        from_attributes = True
+        orm_mode = True
+
+
+

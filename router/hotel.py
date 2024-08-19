@@ -17,7 +17,7 @@ def create_new_hotel(request: HotelBase, db: Session = Depends(get_db)):
 
 
 @router.get('/', response_model=List[HotelDisplay])
-def list_hotels(db: Session = Depends(get_db)):
+def list_hotels(db: Session = Depends(get_db), ):
     return db_hotels.get_all_hotels(db)
 
 
@@ -30,7 +30,7 @@ def read_hotel(id: int, db: Session = Depends(get_db)):
 
 
 @router.put('/{id}', response_model=HotelDisplay)
-def update_hotel(id: int, request: HotelBase, db: Session = Depends(get_db)):
+def update_hotel(id: int, request: HotelBase, db: Session = Depends(get_db),):
     hotel = db_hotels.update_hotel(db, id, request)
     if not hotel:
         raise HTTPException(status_code=404, detail="Hotel not found")

@@ -4,6 +4,7 @@ from db.hash import Hash
 from schemas import UserBase, UserDisplay, UserLogin
 from db.database import get_db
 from db import db_user
+from auth.oauth2 import  get_current_user
 
 router = APIRouter(
     prefix='/users',
@@ -17,7 +18,7 @@ def register_user(request: UserBase, db: Session = Depends(get_db)):
 
 
 @router.post('/login', response_model=UserDisplay)
-def login(request: UserLogin, db: Session = Depends(get_db)):
+def login(request: UserLogin, db: Session = Depends(get_db),current_user: UserBase = Depends(get_current_user)):
     user = db_user.get_user_by_email(db, request.email)
     if not user or not Hash.verify(user.password, request.password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")

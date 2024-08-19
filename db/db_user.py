@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from db.models import DbUser
 from schemas import UserBase
 from db.hash import Hash
+from fastapi import HTTPException, status
 
 
 def create_user(db: Session, request: UserBase):
@@ -20,8 +21,16 @@ def get_all_users(db: Session):
     return db.query(DbUser).all()
 
 
-def get_user(db: Session, id: int):
+def get_user(db: Session, username: int):
     return db.query(DbUser).filter(DbUser.id == id).first()
+
+
+def get_user_by_username(db: Session, username: str):
+    user = db.query(DbUser).filter(DbUser.user_name == username).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f'user with username{username} not found')
+    return user
 
 
 def get_user_by_email(db: Session, email: str):
