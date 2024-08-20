@@ -5,7 +5,7 @@ from schemas import ReviewBase, ReviewDisplay
 from db.database import get_db
 from db.db_review import create_review, get_reviews
 from auth.oauth2 import get_current_user
-from db.models import DbUser 
+from db.models import DbUser
 
 router = APIRouter(
     prefix='/reviews',

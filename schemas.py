@@ -40,13 +40,17 @@ class HotelDisplay(HotelBase):
 
 class BookingBase(BaseModel):
     user_id: int
-    room_id: int
+    hotel_id: int
     start_date: datetime
     end_date: datetime
 
 
 class BookingDisplay(BookingBase):
     id: int
+    user_id: int
+    hotel_id: int
+    start_date: datetime
+    end_date: datetime
 
     class Config:
         from_attributes = True

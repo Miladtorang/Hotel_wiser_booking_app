@@ -26,6 +26,7 @@ class Hotel(Base):
     # Relationships
     rooms = relationship("Room", back_populates="hotel")
     reviews = relationship("Review", back_populates="hotel")
+    reservations = relationship("Booking", back_populates="hotel")
 
 
 class Room(Base):
@@ -37,20 +38,19 @@ class Room(Base):
 
     # Relationships
     hotel = relationship("Hotel", back_populates="rooms")
-    reservations = relationship("Booking", back_populates="room")
 
 
 class Booking(Base):
     __tablename__ = 'bookings'
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id'))
-    room_id = Column(Integer, ForeignKey('rooms.id'))
+    hotel_id = Column(Integer, ForeignKey('hotels.id'))
     start_date = Column(DateTime)
     end_date = Column(DateTime)
 
     # Relationships
     user = relationship("DbUser", back_populates="reservations")
-    room = relationship("Room", back_populates="reservations")
+    hotel = relationship("Hotel", back_populates="reservations")
 
 
 class Review(Base):

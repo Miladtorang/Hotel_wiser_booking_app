@@ -1,37 +1,34 @@
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from db.models import Booking, Room
-from schemas import BookingBase as ReservationCreate
+from db.models import Booking, Hotel
+from schemas import BookingBase
+from fastapi import HTTPException
 
 
-def create_reservation(db: Session, request: ReservationCreate, user_id: int):
-    room = db.query(Room).filter(Room.id == request.room_id).first()
-    if not room or not room.availability:
-        raise HTTPException(status_code=400, detail="Room not available")
-    new_reservation = Booking(
+def create_reservation(db: Session, booking: BookingBase, user_id: int):
+    hotel = db.query(Hotel).filter(Hotel.id == booking.hotel_id).first()
+    if hotel is None:
+        raise HTTPException(status_code=404, detail="Room not found")
+
+    db_booking = Booking(
         user_id=user_id,
-        room_id=request.room_id,
-        start_date=request.start_date,
-        end_date=request.end_date
+        hotel_id=booking.hotel_id,
+        start_date=booking.start_date,
+        end_date=booking.end_date
     )
-    db.add(new_reservation)
+
+    db.add(db_booking)
+
     db.commit()
-    db.refresh(new_reservation)
-    room.availability = False
+
+    db.refresh(db_booking)
+    return db_booking
+
+
+def cancel_reservation(db: Session, booking_id: int):
+    booking = db.query(Booking).filter(Booking.id == booking_id).first()
+    if booking is None:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    db.delete(booking)
     db.commit()
 
-    return new_reservation
-
-
-def get_reservations(db: Session, user_id: int):
-    return db.query(Booking).filter(Booking.user_id == user_id).all()
-
-
-def cancel_reservation(db: Session, reservation_id: int):
-    reservation = db.query(Booking).filter(Booking.id == reservation_id).first()
-    if reservation:
-        db.delete(reservation)
-        db.commit()
-        return {"detail": "Reservation canceled"}
-    else:
-        raise HTTPException(status_code=404, detail="Reservation not found")
+    return {"detail": "Booking canceled"}
