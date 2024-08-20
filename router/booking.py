@@ -23,12 +23,12 @@ def create_new_booking(request: BookingBase, db: Session = Depends(get_db),
 
 @router.get('/', response_model=List[BookingDisplay])
 def list_bookings(db: Session = Depends(get_db), current_user: UserDisplay = Depends(get_current_user)):
-    return db_booking.get_reservations(db, current_user.id)
+    return db_booking.create_reservation(db, current_user.id)
 
 
 @router.delete('/{id}', response_model=dict)
 def cancel_booking(id: int, db: Session = Depends(get_db), current_user: UserDisplay = Depends(get_current_user)):
-    # Ensure the booking belongs to the current user
+
     booking = db.query(Booking).filter(Booking.id == id, Booking.user_id == current_user.id).first()
     if not booking:
         raise HTTPException(status_code=404, detail="Booking not found or not authorized to cancel")
