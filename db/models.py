@@ -11,7 +11,7 @@ class DbUser(Base):
     password = Column(String)
 
     # Relationships
-    reservations = relationship("Booking", back_populates="user")
+    reservations = relationship("Booking", cascade="all,delete", back_populates="user")
     reviews = relationship("Review", back_populates="user")
 
 

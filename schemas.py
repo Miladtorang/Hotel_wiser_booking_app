@@ -69,5 +69,6 @@ class ReviewDisplay(ReviewBase):
     class Config:
         orm_mode = True
 
-
-
+class TokenBase(BaseModel):
+    username: str
+    password: str

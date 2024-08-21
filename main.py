@@ -10,5 +10,6 @@ app.include_router(user.router)
 app.include_router(hotel.router)
 app.include_router(booking.router)
 app.include_router(review.router)
+#app.include_router(token.router)
 
 Base.metadata.create_all(bind=engine)
