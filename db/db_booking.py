@@ -4,16 +4,12 @@ from schemas import BookingBase
 from fastapi import HTTPException
 
 
-def create_reservation(db: Session, booking: BookingBase, user_id: int):
-    hotel = db.query(Hotel).filter(Hotel.id == booking.hotel_id).first()
-    if hotel is None:
-        raise HTTPException(status_code=404, detail="Hotel not found")
-
+def create_reservation(db: Session, user_id: int, hotel_id: int, start_date: str, end_date: str):
     db_booking = Booking(
         user_id=user_id,
-        hotel_id=booking.hotel_id,
-        start_date=booking.start_date,
-        end_date=booking.end_date
+        hotel_id=hotel_id,
+        start_date=start_date,
+        end_date=end_date
     )
     db.add(db_booking)
     db.commit()
