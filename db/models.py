@@ -43,8 +43,8 @@ class Room(Base):
 class Booking(Base):
     __tablename__ = 'bookings'
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    hotel_id = Column(Integer, ForeignKey('hotels.id'))
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    hotel_id = Column(Integer, ForeignKey('hotels.id'), nullable=False)
     start_date = Column(DateTime)
     end_date = Column(DateTime)
 

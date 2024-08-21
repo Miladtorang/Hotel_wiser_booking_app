@@ -7,7 +7,7 @@ from fastapi import HTTPException
 def create_reservation(db: Session, booking: BookingBase, user_id: int):
     hotel = db.query(Hotel).filter(Hotel.id == booking.hotel_id).first()
     if hotel is None:
-        raise HTTPException(status_code=404, detail="Room not found")
+        raise HTTPException(status_code=404, detail="Hotel not found")
 
     db_booking = Booking(
         user_id=user_id,
@@ -15,13 +15,14 @@ def create_reservation(db: Session, booking: BookingBase, user_id: int):
         start_date=booking.start_date,
         end_date=booking.end_date
     )
-
     db.add(db_booking)
-
     db.commit()
-
     db.refresh(db_booking)
     return db_booking
+
+
+def get_all_bookings(db: Session, user_id: int):
+    return db.query(Booking).filter(Booking.user_id == user_id).all()
 
 
 def cancel_reservation(db: Session, booking_id: int):
@@ -30,5 +31,4 @@ def cancel_reservation(db: Session, booking_id: int):
         raise HTTPException(status_code=404, detail="Booking not found")
     db.delete(booking)
     db.commit()
-
     return {"detail": "Booking canceled"}
