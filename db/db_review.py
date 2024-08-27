@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
-from db.models import Review
+from db.models import DbReview
 from schemas import ReviewBase
 
 
 def create_review(db: Session, request: ReviewBase, user_id: int):
-    new_review = Review(
+    new_review = DbReview(
         user_id=user_id,
         hotel_id=request.hotel_id,
         rating=request.rating,
@@ -17,4 +17,4 @@ def create_review(db: Session, request: ReviewBase, user_id: int):
 
 
 def get_reviews(db: Session):
-    return db.query(Review).all()
+    return db.query(DbReview).all()

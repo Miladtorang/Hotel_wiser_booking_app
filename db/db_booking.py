@@ -1,11 +1,11 @@
 from sqlalchemy.orm import Session
-from db.models import Booking, Hotel
+from db.models import DbBooking, DbHotel
 from schemas import BookingBase
 from fastapi import HTTPException
 
 
 def create_reservation(db: Session, user_id: int, hotel_id: int, start_date: str, end_date: str):
-    db_booking = Booking(
+    db_booking = DbBooking(
         user_id=user_id,
         hotel_id=hotel_id,
         start_date=start_date,
@@ -18,11 +18,11 @@ def create_reservation(db: Session, user_id: int, hotel_id: int, start_date: str
 
 
 def get_all_bookings(db: Session, user_id: int):
-    return db.query(Booking).filter(Booking.user_id == user_id).all()
+    return db.query(DbBooking).filter(DbBooking.user_id == user_id).all()
 
 
 def cancel_reservation(db: Session, booking_id: int):
-    booking = db.query(Booking).filter(Booking.id == booking_id).first()
+    booking = db.query(DbBooking).filter(DbBooking.id == booking_id).first()
     if booking is None:
         raise HTTPException(status_code=404, detail="Booking not found")
     db.delete(booking)
