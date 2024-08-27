@@ -17,7 +17,7 @@ def create_new_hotel(request: HotelBase, db: Session = Depends(get_db)):
 
 
 @router.get('/', response_model=List[HotelDisplay])
-def list_hotels(db: Session = Depends(get_db), ):
+def list_hotels(db: Session = Depends(get_db)):
     return db_hotels.get_all_hotels(db)
 
 

@@ -35,6 +35,7 @@ def read_user(id: int, db: Session = Depends(get_db), current_user: DbUser = Dep
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You are not authorized")
     return user
 
+
 @router.put('/{id}', response_model=UserDisplay)
 def update_user(
         id: int,

@@ -22,19 +22,13 @@ class DbHotel(Base):
     description = Column(String, nullable=True)
     room_count = Column(Integer, nullable=False)
 
-    rooms = relationship("Room", back_populates="hotel")
-    reviews = relationship("DbReview", back_populates="hotel")
-    reservations = relationship("DbBooking", back_populates="hotel")
 
 
-class Room(Base):
-    __tablename__ = 'rooms'
-    id = Column(Integer, primary_key=True, index=True)
-    hotel_id = Column(Integer, ForeignKey('hotels.id'))
-    room_type = Column(String)
-    availability = Column(Boolean, default=True)
+    reviews = relationship("DbReview", cascade="all,delete", back_populates="hotel")
+    reservations = relationship("DbBooking",cascade="all,delete", back_populates="hotel")
 
-    hotel = relationship("DbHotel", back_populates="rooms")
+
+
 
 
 class DbBooking(Base):
