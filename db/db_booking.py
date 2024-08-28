@@ -23,8 +23,6 @@ def get_all_bookings(db: Session, user_id: int):
 
 def cancel_reservation(db: Session, booking_id: int):
     booking = db.query(DbBooking).filter(DbBooking.id == booking_id).first()
-    if booking is None:
-        raise HTTPException(status_code=404, detail="Booking not found")
     db.delete(booking)
     db.commit()
-    return {"detail": "Booking canceled"}
+    return 

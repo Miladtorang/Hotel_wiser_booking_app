@@ -3,12 +3,18 @@ from db.models import DbHotel
 from schemas import HotelBase
 
 
-def create_hotel(db: Session, hotel: HotelBase):
-    db_hotel = DbHotel(**hotel.dict())
-    db.add(db_hotel)
+def create_hotel(db: Session, request: HotelBase):
+    new_hotel = DbHotel(
+        name = request.name,
+        user_id = request.user_id,
+        location = request.location,
+        description = request.description,
+        room_count = request.room_count
+    )
+    db.add(new_hotel)
     db.commit()
-    db.refresh(db_hotel)
-    return db_hotel
+    db.refresh(new_hotel)
+    return new_hotel
 
 
 def get_all_hotels(db: Session):

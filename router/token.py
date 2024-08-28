@@ -7,6 +7,7 @@ from db.models import DbUser
 from fastapi.param_functions import Depends
 from sqlalchemy.orm.session import Session
 from auth import oauth2
+from auth.oauth2 import OAuth2PasswordBearer
 
 router = APIRouter(
     prefix='/tokens',

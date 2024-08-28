@@ -18,7 +18,6 @@ class UserDisplay(BaseModel):
     id: int
     user_name: str
     email: EmailStr
-    # role: str
 
     class Config:
         orm_mode = True
@@ -26,9 +25,11 @@ class UserDisplay(BaseModel):
 
 class HotelBase(BaseModel):
     name: str
+    user_id: int
     location: str
     description: Optional[str] = None
     room_count: int
+
 
 
 class HotelDisplay(HotelBase):

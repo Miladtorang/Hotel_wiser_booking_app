@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from db.models import DbReview
-from schemas import ReviewBase,UserDisplay
+from schemas import ReviewBase, UserDisplay
 
 
 def create_review(db: Session, request: ReviewBase, user_id: int):
@@ -19,13 +19,9 @@ def create_review(db: Session, request: ReviewBase, user_id: int):
 def get_reviews(db: Session):
     return db.query(DbReview).all()
 
+
 def delete_review(db: Session, review_id: int):
     review = db.query(DbReview).filter(DbReview.id == review_id).first()
-    if review is None:
-        raise HTTPException(status_code=404, detail="Review not found")
     db.delete(review)
     db.commit()
-    return {"detail": "Review deleted"}
-
-
-
+    return 

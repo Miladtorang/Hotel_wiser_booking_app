@@ -13,20 +13,25 @@ router = APIRouter(
 )
 
 
-@router.post('', response_model=UserDisplay)
+@router.post('', response_model=UserDisplay, status_code=201)
 def register_user(request: UserBase, db: Session = Depends(get_db)):
+    user = request.username
+    existing_user = None
+    
+    try:
+        existing_user = db_user.get_user_by_username(db, user)
+    except:
+        pass
+
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Username already exists")
+
+        
     return db_user.create_user(db, request)
 
 
-# @router.post('/login', response_model=UserDisplay)
-# def login(request: UserLogin, db: Session = Depends(get_db),current_user: UserBase = Depends(get_current_user)):
-#     user = db_user.get_user_by_email(db, request.email)
-#     if not user or not Hash.verify(user.password, request.password):
-#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
-#     return user
 
-
-@router.get('/{id}', response_model=UserDisplay)
+@router.get('/{id}', response_model=UserDisplay, status_code=200)
 def read_user(id: int, db: Session = Depends(get_db), current_user: DbUser = Depends(get_current_user)):
     user = db_user.get_user(db, id)
     if not user:
@@ -36,7 +41,7 @@ def read_user(id: int, db: Session = Depends(get_db), current_user: DbUser = Dep
     return user
 
 
-@router.put('/{id}', response_model=UserDisplay)
+@router.put('/{id}', response_model=UserDisplay, status_code=200)
 def update_user(
         id: int,
         request: UserBase,
