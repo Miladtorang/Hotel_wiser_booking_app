@@ -18,8 +18,8 @@ router = APIRouter(
 @router.post('/', response_model=BookingDisplay, status_code=201)
 def create_new_booking(request: BookingBase, db: Session = Depends(get_db),
                        current_user: DbUser = Depends(get_current_user)):
-    # if request.user_id is not current_user.id:
-    #     raise HTTPException(403, 'Not authenticated')
+    if request.user_id is not current_user.id:
+        raise HTTPException(400, 'You are not authorized')
 
     hotel = db.query(DbHotel).filter(DbHotel.id == request.hotel_id).first()
 

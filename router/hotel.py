@@ -16,6 +16,8 @@ router = APIRouter(
 
 @router.post('/', response_model=HotelDisplay, status_code=201)
 def create_new_hotel(request: HotelBase, db: Session = Depends(get_db), current_user: DbUser = Depends(get_current_user)):
+    if request.user_id != current_user.id:
+        raise  HTTPException(status_code=400, detail="You are not authorized")
     return db_hotels.create_hotel(db, request)
 
 

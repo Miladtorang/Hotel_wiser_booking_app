@@ -16,6 +16,8 @@ router = APIRouter(
 @router.post('/', response_model=ReviewDisplay, status_code=201)
 def create_review_endpoint(request: ReviewBase, db: Session = Depends(get_db),
                            current_user: DbUser = Depends(get_current_user)):
+    if request.user_id != current_user.id:
+        raise HTTPException(400, 'You are not authorized')
     hotel = db.query(DbHotel).filter(DbHotel.id == request.hotel_id).first()
     if hotel.user_id == current_user.id:
         raise  HTTPException(status_code=400, detail="You can not review your own hotel" )

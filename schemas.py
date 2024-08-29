@@ -68,6 +68,7 @@ class BookingDisplay(BookingBase):
 
 
 class ReviewBase(BaseModel):
+    user_id: int
     hotel_id: int
     rating: int
     comment: Optional[str] = None
@@ -75,7 +76,6 @@ class ReviewBase(BaseModel):
 
 class ReviewDisplay(ReviewBase):
     id: int
-    user_id: int
 
     class Config:
         orm_mode = True
