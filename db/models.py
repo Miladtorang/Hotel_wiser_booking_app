@@ -23,7 +23,7 @@ class DbHotel(Base):
     name = Column(String, index=True, nullable=False)
     location = Column(String, index=True, nullable=False)
     description = Column(String, nullable=True)
-    room_count = Column(Integer, nullable=False)
+    price = Column(Integer, nullable=False)
 
     owner = relationship("DbUser", back_populates="owned_hotels")
     reviews = relationship("DbReview", cascade="all,delete", back_populates="hotel")

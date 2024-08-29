@@ -28,13 +28,13 @@ class HotelBase(BaseModel):
     user_id: int
     location: str
     description: Optional[str] = None
-    room_count: int
+    price: int
 
 
 
 class HotelDisplay(HotelBase):
     id: int
-
+    rating: float
     class Config:
         from_attributes = True
 
