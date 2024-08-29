@@ -32,12 +32,22 @@ class HotelBase(BaseModel):
 
 
 
-class HotelDisplay(HotelBase):
+class HotelDisplay(BaseModel):
     id: int
-    rating: float
+    name: str
+    user_id: int
+    location: str
+    description: Optional[str] = None
+    price: int
+    
     class Config:
         from_attributes = True
 
+class RatedHotelDisplay(HotelDisplay):
+    rating: float
+
+    class Config:
+        from_attributes = True
 
 class BookingBase(BaseModel):
     user_id: int

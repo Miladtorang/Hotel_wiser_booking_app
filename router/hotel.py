@@ -1,7 +1,7 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException,Query
 from sqlalchemy.orm import Session
-from schemas import HotelBase, HotelDisplay
+from schemas import HotelBase, HotelDisplay,RatedHotelDisplay
 from db.database import get_db
 from db import db_hotels
 from db.models import DbUser,DbHotel
@@ -23,8 +23,8 @@ def create_new_hotel(request: HotelBase, db: Session = Depends(get_db), current_
 def list_hotels(
     location: Optional[str] = Query(None, description="Filter by hotel location"),
     name: Optional[str] = Query(None, description="Filter by hotel name"),
-    min_price: Optional[int] = Query(None, description="Filter by minimum room count"),
-    max_price: Optional[int] = Query(None, description="Filter by maximum room count"),
+    min_price: Optional[int] = Query(None, description="Filter by minimum price"),
+    max_price: Optional[int] = Query(None, description="Filter by maximum price"),
     db: Session = Depends(get_db)
 ):
     return db_hotels.get_all_hotels(db, location=location, name=name, min_price=min_price, max_price=max_price)
@@ -36,13 +36,13 @@ def list_hotels(
 
 
 
-@router.get('/{id}', response_model=HotelDisplay, status_code=200)
+@router.get('/{id}', response_model=RatedHotelDisplay, status_code=200)
 def read_hotel(id: int, db: Session = Depends(get_db)):
     hotel = db_hotels.get_hotel(db, id)
     if not hotel:
         raise HTTPException(status_code=404, detail="Hotel not found")
     average_rating = calculate_hotel_rating(db, id)
-    return HotelDisplay(
+    return RatedHotelDisplay(
         id=hotel.id,
         name= hotel.name,
         user_id= hotel.user_id,
@@ -55,9 +55,11 @@ def read_hotel(id: int, db: Session = Depends(get_db)):
 
 @router.put('/{id}', response_model=HotelDisplay, status_code=200)
 def update_hotel(id: int, request: HotelBase, db: Session = Depends(get_db), current_user: DbUser = Depends(get_current_user)):
-    hotel = db.query(DbHotel).filter(DbHotel.id == id).filter(DbHotel.user_id == current_user.id).first() 
+    hotel = db.query(DbHotel).filter(DbHotel.id == id).first() 
     if not hotel:
-        raise HTTPException(status_code=404, detail="Hotel not found or you are not authorized to delete")
+        raise HTTPException(status_code=404, detail="Hotel not found")
+    if id != current_user.id:
+        raise HTTPException(status_code=403, detail="You are not authorized")
     return db_hotels.update_hotel(db, id, request)
 
 
