@@ -60,7 +60,7 @@ def update_hotel(id: int, request: HotelBase, db: Session = Depends(get_db), cur
     hotel = db.query(DbHotel).filter(DbHotel.id == id).first() 
     if not hotel:
         raise HTTPException(status_code=404, detail="Hotel not found")
-    if id != current_user.id:
+    if hotel.user_id != current_user.id:
         raise HTTPException(status_code=403, detail="You are not authorized")
     return db_hotels.update_hotel(db, id, request)
 
@@ -70,7 +70,7 @@ def delete_hotel(id: int, db: Session = Depends(get_db), current_user: DbUser = 
     hotel = db.query(DbHotel).filter(DbHotel.id == id).first()
     if not hotel:
         raise HTTPException(status_code=404, detail="Hotel not found ")
-    if id != current_user.id:
+    if hotel.user_id != current_user.id:
         raise HTTPException(status_code=403, detail="You are not authorized")
     db_hotels.delete_hotel(db, id)
     return 

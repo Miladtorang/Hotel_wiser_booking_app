@@ -39,7 +39,7 @@ def cancel_booking(id: int, db: Session = Depends(get_db), current_user: UserDis
     booking = db.query(DbBooking).filter(DbBooking.id == id, DbBooking.user_id == current_user.id).first()
     if not booking:
         raise HTTPException(status_code=404, detail="Booking not found")
-    if id != current_user.id:
+    if booking.user_id != current_user.id:
         raise
     HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You are not authorized")
     db_booking.cancel_reservation(db, id)
